@@ -74,7 +74,7 @@ public class Main {
 
         }
 
-        String startTime = scanner.next();
+        String startTime = scanner.nextLine();
         boolean singleDay;
         //Change these to ArrayLists
 
@@ -175,7 +175,9 @@ public class Main {
 
         List<WebElement> rounds = driver.findElements(By.xpath("/html/body/div/section[3]/nav/a"));
         int roundsToLoad = rounds.size(), roundCur;
+        //Load first division
         System.out.println(tournamentStyle);
+        System.out.println(roundDayInterval);
         System.out.println("Division: 1");
         for (int i = 0; i < roundsToLoad; i++) {
             roundCur = i + 1;
@@ -190,11 +192,10 @@ public class Main {
                         break;
                     }
                 }
-                curRoundTime = addTime(extractedTime.get(interval), extractedAMPM.get(interval), 30 * ((i - 1) - (int) roundDayInterval.get(clamp((interval * 2) - 1, 0, roundDayInterval.size() - 1))));
+                curRoundTime = addTime(extractedTime.get(interval), extractedAMPM.get(interval), clamp(30 * ((i + 1) - (int) roundDayInterval.get(clamp(interval + 1, 0))), 0));
             }
             System.out.println("Current round time: " + curRoundTime);
-
-
+            System.out.println("Current Date: " + extractedDate.get(interval));
 
             driver.get(usableLink + roundCur);
 
@@ -264,16 +265,15 @@ public class Main {
         if(tournamentStyle == parseType.NAQTMultiALL) {
             for (int j = 2; j <= divisionCount; j++) {
                 System.out.println("Division: " + j);
-                rounds = driver.findElements(By.xpath("/html/body/div/section["+ (j + 3) + "]/nav/a"));
                 roundsToLoad = rounds.size();
                 for (int i = 0; i < roundsToLoad; i++) {
                     roundCur = i + 1;
 //
 //                    curRoundTime = addTime(extractedTime, extractedAMPM, 30 * i);
-//
-//                    driver.get(usableLink + roundCur);
-//
-//                    System.out.println("Round: " + roundCur);
+
+                    driver.get(usableLink + roundCur);
+
+                    System.out.println("Round: " + roundCur);
                     roundCur = i + 1;
                     int interval = 0;
                     //Determine current round's day and time
@@ -289,7 +289,7 @@ public class Main {
                         curRoundTime = addTime(extractedTime.get(interval), extractedAMPM.get(interval), 30 * (i - (int) roundDayInterval.get(clamp((2 * interval), 0))));
                     }
 
-                    List<WebElement> games = driver.findElements(By.xpath("/html/body/div/section[" + (j + 3) + "]/section[1]/div/div[2]/div[2]/table/tbody/tr"));
+                    List<WebElement> games = driver.findElements(By.xpath("/html/body/div/section[5]/section[" + j + "]/div/div[2]/div[2]/table/tbody/tr"));
                     int gamesToLoad = games.size();
 
                     //System.out.println(gamesToLoad);
@@ -299,14 +299,14 @@ public class Main {
                     for (int k = 1; k <= gamesToLoad; k++) {
                         String team1, team2;
                         String score1, score2;
-                        element = driver.findElement(By.xpath("/html/body/div/section[" + (j + 3) + "]/section[1]/div/div[2]/div[2]/table/tbody/tr[" + k + "]/th[1]/a"));
+                        element = driver.findElement(By.xpath("/html/body/div/section[5]/section[" + j + "]/div/div[2]/div[2]/table/tbody/tr[" + k + "]/th[1]/a"));
                         team1 = element.getText();
-                        element = driver.findElement(By.xpath("/html/body/div/section[" + (j + 3) + "]/section[1]/div/div[2]/div[2]/table/tbody/tr[" + k + "]/td[1]"));
+                        element = driver.findElement(By.xpath("/html/body/div/section[5]/section[" + j + "]/div/div[2]/div[2]/table/tbody/tr[" + k + "]/td[1]"));
                         score1 = element.getText();
 
-                        element = driver.findElement(By.xpath("/html/body/div/section[" + (j + 3) + "]/section[1]/div/div[2]/div[2]/table/tbody/tr[" + k + "]/th[2]/a"));
+                        element = driver.findElement(By.xpath("/html/body/div/section[5]/section[" + j + "]/div/div[2]/div[2]/table/tbody/tr[" + k + "]/th[2]/a"));
                         team2 = element.getText();
-                        element = driver.findElement(By.xpath("/html/body/div/section[" + (j + 3) + "]/section[1]/div/div[2]/div[2]/table/tbody/tr[" + k + "]/td[7]"));
+                        element = driver.findElement(By.xpath("/html/body/div/section[5]/section[" + j + "]/div/div[2]/div[2]/table/tbody/tr[" + k + "]/td[7]"));
                         score2 = element.getText();
                         team1 = TeamLookup.NAQTtoDatabase(team1);
                         team2 = TeamLookup.NAQTtoDatabase(team2);
@@ -316,7 +316,7 @@ public class Main {
                         }
 
                         System.out.println("Winning Team: " + team1 + "; Score: " + score1 + " | Losing Team: " + team2 + "; Score: " + score2);
-                        String[] csvRow = {extractedDate + " " + curRoundTime, tournament, team1, team2, "1", "0"};
+                        String[] csvRow = {extractedDate.get(interval) + " " + curRoundTime, tournament, team1, team2, "1", "0"};
 
                         gameOutputs.add(csvRow);
                     }

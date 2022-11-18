@@ -55,6 +55,14 @@ public class TeamLookup {
         badNames.add("Holy Family");
         badNames.add("Providence");
         badNames.add("Breck");
+        badNames.add("Kennedy");
+        badNames.add("Benilde-St. Margaret's");
+        badNames.add("Blake");
+        badNames.add("St. Paul Central");
+        badNames.add("Roseville");
+        badNames.add("Hill-Murray");
+        badNames.add("St. Thomas");
+        badNames.add("Shattuck-St. Mary's");
     }
 
     private static String convertBadName(String badName, char teamLevel) {
@@ -67,9 +75,17 @@ public class TeamLookup {
             case "Pine City" -> returnable = "Pine City Junior/Senior High School";
             case "St. Paul Academy" -> returnable = "St. Paul Academy and Summit School";
             case "Parnassus Prep" -> returnable = "Parnassus Preparatory School";
-            case "Holy Family" -> returnable = "Holy Family Catholic School";
+            case "Holy Family" -> returnable = "Holy Family Catholic High School";
             case "Providence" -> returnable = "Providence Academy";
             case "Breck" -> returnable = "Breck School";
+            case "Kennedy" -> returnable = "John F. Kennedy High School";
+            case "Benilde-St. Margaret's" -> returnable = "Benilde-St. Margaret's School";
+            case "Blake" -> returnable = "The Blake School";
+            case "St. Paul Central" -> returnable = "St. Paul Central High School";
+            case "Roseville" -> returnable = "Roseville Area High School";
+            case "Hill-Murray" -> returnable = "Hill-Murray School";
+            case "St. Thomas" -> returnable = "St. Thomas Academy";
+            case "Shattuck-St. Mary's" -> returnable = "Shattuck-St. Mary's School";
             default -> throw new IllegalStateException("Unexpected value: " + badName);
         }
 
